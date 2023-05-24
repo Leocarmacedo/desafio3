@@ -1,7 +1,5 @@
 package com.carnacorp.desafio3.services;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.carnacorp.desafio3.dto.ClientDTO;
 import com.carnacorp.desafio3.entities.Client;
 import com.carnacorp.desafio3.repositories.ClientRepository;
+import com.carnacorp.desafio3.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class ClientService {
@@ -20,8 +19,7 @@ public class ClientService {
 
 	@Transactional(readOnly = true)
 	public ClientDTO findById(Long id) {
-		Optional<Client> result = repository.findById(id);
-		Client client = result.get();
+		Client client = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
 		return new ClientDTO(client);
 	}
 
